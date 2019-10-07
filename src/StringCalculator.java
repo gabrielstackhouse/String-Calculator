@@ -56,7 +56,6 @@ public class StringCalculator {
             delimiter += ']';
         }
 
-
         // Split into array based off chosen delimiter
         String split[];
         if(delimiter.isEmpty()) {
@@ -76,7 +75,7 @@ public class StringCalculator {
         ArrayList<Integer> negatives = new ArrayList<Integer>();
         for(int i = 0; i < split.length; i++) {
 
-            // Ignore empty strings or values greater than 1000
+            // Ignore empty strings and values greater than 1000
             if(split[i].isEmpty() || Integer.parseInt(split[i]) > 1000) {
                 continue;
             }
@@ -84,7 +83,7 @@ public class StringCalculator {
             // Get current value
             int curValue = Integer.parseInt(split[i]);
 
-            // Record any negative values, to print in exception later
+            // Record any negative values to print in exception later
             if(curValue < 0) {
                 negatives.add(curValue);
             }
@@ -93,7 +92,7 @@ public class StringCalculator {
             }
         }
 
-        // Throw an exception if there are negative values included
+        // Throw an exception if negative values were found
         if(negatives.size() > 0) {
             throw new IllegalArgumentException("negatives not allowed: " +
                     negatives.toString());

@@ -1,6 +1,5 @@
 import static org.junit.Assert.*;
 
-import com.sun.org.apache.xpath.internal.operations.String;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
