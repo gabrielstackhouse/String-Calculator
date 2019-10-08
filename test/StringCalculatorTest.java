@@ -1,5 +1,4 @@
 import static org.junit.Assert.*;
-
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,14 +38,61 @@ public class StringCalculatorTest {
     @Test
     public void addChangeDelimiterAnyLength() {
         assertEquals(6, calculator.add("//[***]\n1***2***3"));
+        assertEquals(7, calculator.add("//[####]\n4####2####1"));
     }
 
     /**
-     * Test changing delimiters to multiple characters
+     * Test adding multiple delimiters
      */
     @Test
     public void addChangeDelimiterMultiple() {
         assertEquals(6, calculator.add("//[*][%]\n1*2%3"));
+    }
+
+    /**
+     * Test adding multiple delimiters of various lengths
+     */
+    @Test
+    public void addChangeDelimiterMultipleLongerLengths() {
+        assertEquals(6, calculator.add("//[***][%%]\n1***2%%3"));
+        assertEquals(10, calculator.add("//[^^^][@][$$$$]\n1@2$$$$3^^^4"));
+    }
+
+    /**
+     * Test adding delimiters where some need backslashes and some don't
+     */
+    public void addDelimiterWithAndWithoutBackslashes() {
+        assertEquals(6, calculator.add("//[^][@]^\n1^2@3"));
+        assertEquals(6, calculator.add("//[^^][@@@]^\n1^^2@@@3"));
+        assertEquals(10, calculator.add("//[^^][@@@][....]^\n1^^2@@@3....4"));
+    }
+
+    /**
+     * Test that delimiters needing backslashes function correctly
+     */
+    @Test
+    public void addDelimiterWithBackslashes() {
+        assertEquals(6, calculator.add("//^\n1^2^3"));
+        assertEquals(6, calculator.add("//.\n1.2.3"));
+        assertEquals(6, calculator.add("//$\n1$2$3"));
+        assertEquals(6, calculator.add("//(\n1(2(3"));
+        assertEquals(6, calculator.add("//)\n1)2)3"));
+        assertEquals(6, calculator.add("//|\n1|2|3"));
+        assertEquals(6, calculator.add("//*\n1*2*3"));
+        assertEquals(6, calculator.add("//+\n1+2+3"));
+        assertEquals(6, calculator.add("//?\n1?2?3"));
+        assertEquals(6, calculator.add("//{\n1{2{3"));
+        assertEquals(6, calculator.add("//\\\n1\\2\\3"));
+    }
+
+    /**
+     * Test adding multiple delimiters needing backslashes
+     */
+    @Test
+    public void addDelimiterWithBackslashesMultiple() {
+        assertEquals(6, calculator.add("//[^][.]^\n1^2.3"));
+        assertEquals(6, calculator.add("//[^^][...]^\n1^^2...3"));
+        assertEquals(10, calculator.add("//[^^][....][$$$]^\n1^^2$$$3....4"));
     }
 
     /**
@@ -64,6 +110,7 @@ public class StringCalculatorTest {
     public void addIgnoreValuesLargerThan1000() {
         assertEquals(1002, calculator.add("2,1000"));
         assertEquals(2, calculator.add("2,1001"));
+        assertEquals(5, calculator.add("2,2306,3"));
     }
 
     /**
@@ -71,7 +118,7 @@ public class StringCalculatorTest {
      * delimiters
      */
     @Test
-    public void addMultipleDelimiters() {
+    public void addUseCommaAndNewLineDelimiters() {
         assertEquals(6, calculator.add("1,2,3"));
         assertEquals(6, calculator.add("1\n2\n3"));
         assertEquals(6, calculator.add("1,2\n3"));
@@ -85,6 +132,21 @@ public class StringCalculatorTest {
         assertEquals(11, calculator.add("1,4,3,2,1"));
         assertEquals(8, calculator.add("4,2,1,1"));
         assertEquals(15, calculator.add("1,11,3"));
+        assertEquals(15, calculator.add("1,2,1,2,1,2,1,2,1,2"));
+    }
+
+    /**
+     * Test that an exception is thrown when a negative number is included, and
+     * the correct message is displayed to the user
+     */
+    @Test
+    public void addNegativeNumber() {
+        // Define rules
+        expectedEx.expect(IllegalArgumentException.class);
+        expectedEx.expectMessage("negatives not allowed: [-4]");
+
+        // This should throw an IllegalArgumentException
+        calculator.add("1,-4,7");
     }
 
     /**
@@ -92,7 +154,7 @@ public class StringCalculatorTest {
      * the correct message is displayed to the user
      */
     @Test
-    public void addNegativeNumber() {
+    public void addNegativeNumbers2() {
         // Define rules
         expectedEx.expect(IllegalArgumentException.class);
         expectedEx.expectMessage("negatives not allowed: [-3, -10, -21]");

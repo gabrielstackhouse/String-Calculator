@@ -29,7 +29,7 @@ public class StringCalculator {
         if(numbers.charAt(0) == '/' && numbers.charAt(1) == '/') {
 
             // Strip string of everything other than delimiter data
-            String delimiterLine = numbers.substring(2).split("\n")[0];
+            String delimiterLine = numbers.substring(2).split("(\n)")[0];
 
             // Parse delimiterLine and put in correct format
             delimiter += "[";
@@ -103,8 +103,8 @@ public class StringCalculator {
     }
 
     /**
-     * Helper class for regex that adds backslashes for characters that require
-     * it
+     * Helper class for regex that prepends backslashes for characters that
+     * require it
      * @param delim - given delimiter
      * @return - given delimiter in correct format for regex
      */
@@ -112,7 +112,6 @@ public class StringCalculator {
         switch(delim) {
             case '^':
             case '.':
-            case '[':
             case '$':
             case '(':
             case ')':
